@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.Security.Cryptography;
 
@@ -16,13 +16,16 @@ namespace Solve_Menue_task
                 Console.WriteLine(" P - Print numbers");
                 Console.WriteLine(" A - Add a number");
                 Console.WriteLine(" M - Display mean of the numbers");// متوسط
-                Console.WriteLine(" S- Display the smallest number");
+                Console.WriteLine(" D- Display the smallest number");
                 Console.WriteLine("L- Display the largest number");
+                Console.WriteLine("F- Enter Number to Find it ");
+                Console.WriteLine("S- Sort Numbers in list");
+                Console.WriteLine("R- Sort Numbers in list");
                 Console.WriteLine(" Q - Quit");
                 // string[] CharOfMenue = { "P", "A", "", "S", "L", "Q" };
                 Console.WriteLine(" Chosse any char ");
                 string C;
-                C = Console.ReadLine().ToUpper() ;
+                C = Console.ReadLine().ToUpper();
                 switch (C)
                 {
                     case "P":
@@ -72,10 +75,10 @@ namespace Solve_Menue_task
                         else if (Menue.Count >= 1)
                         {
                             double Average = Menue.Sum() / Menue.Count;
-                            Console.WriteLine("Mean is :"+Average);
+                            Console.WriteLine("Mean is :" + Average);
                         }
                         break;
-                    case "S":
+                    case "D":
 
                         if (Menue.Count == 0)
                         {
@@ -109,6 +112,49 @@ namespace Solve_Menue_task
                             }
                         }
                         break;
+
+                    case "F": // Sort
+                        if (Menue.Count == 0)
+                        {
+                            Console.WriteLine("can't get any number menue is empty\n");
+                        }
+                        else if (Menue.Count >= 1)
+                        {
+                            Console.WriteLine("ENter Number to find it");
+                            int FindNumber = int.Parse(Console.ReadLine());
+                            if (Menue.Contains(FindNumber))
+                            {
+                                Console.WriteLine($" The  number is :[{FindNumber}] is found in our List you enterd!\n");
+                            }
+                            else
+                                Console.WriteLine($"youer Number enterd({FindNumber}) is not found");
+                        }
+                        break;
+                    case "S":
+                        // Sort
+                        if (Menue.Count == 0)
+                        {
+                            Console.WriteLine("can't get any number menue is empty\n");
+                        }
+                        else if (Menue.Count >= 1)
+                            Menue.Sort();
+                        Console.Write("[");
+                        Console.Write(string.Join("/", Menue));
+                        Console.Write("]\n");
+                        break;  
+                    //  Console.WriteLine(Menue);
+                    case "R":
+                        // Sort
+                        if (Menue.Count == 0)
+                        {
+                     Console.WriteLine("can't get any number menue is empty\n");
+                        }
+                        else if (Menue.Count >= 1)
+                            Menue.Reverse();
+                        Console.Write("[");
+                        Console.Write(string.Join("/", Menue));
+                        Console.Write("]\n");
+                        break;
                     case "Q":
                         Menue.Clear();
                         break;
@@ -117,9 +163,12 @@ namespace Solve_Menue_task
                         Console.WriteLine(" invalid input\n");
                         break;
                 }
+
             }
-
         }
-
     }
 }
+
+
+
+
