@@ -1,0 +1,465 @@
+using System.Xml.Linq;
+ // اسف لان الكود طويل 
+ // تاني حاجة هنعكس الطلب رقم 6/7 مع بعض علشان يكون منطقي اكتر 
+namespace Task4_Solution
+{
+
+    class Student
+    {
+        public int StudentId;
+        public string Name;
+        public int Age;
+        public List<Course> Courses = new List<Course>();
+
+        public Student(int studentId, string StudentName, int age)
+        {
+            this.StudentId = studentId;
+            this.Name = StudentName;
+            this.Age = age;
+        }
+
+        public bool Enroll(Course course)
+        {
+            if (course != null)
+            {
+                Courses.Add(course);
+                return true;
+            }
+            return false;
+        }
+        public string PrintDetails()
+        {
+            return $"ID: {StudentId}, Name: {Name}, Age: {Age}, Courses Count: {Courses.Count}";
+        }
+    }
+    class Instructor
+    {
+        public int InstructorId;
+        public string Name;
+        public string Specialization;
+
+        public Instructor(int instructorId, string name, string specialization)
+        {
+            this.InstructorId = instructorId;
+            this.Name = name;
+            this.Specialization = specialization;
+        }
+
+        public string PrintDetails()
+        {
+            return $"ID: {InstructorId}, Name: {Name}, Specialization: {Specialization}";
+        }
+
+    }
+    class Course
+    {
+        public int CourseId;
+        public string Title;
+        public Instructor Instructor;
+
+        public Course(int courseId, string title, Instructor instructor)
+        {
+            this.CourseId = courseId;
+            this.Title = title;
+            this.Instructor = instructor;
+        }
+
+        public string PrintDetails()
+        {
+            return $" Course ID:{CourseId},Title :{Title},Instructor {Instructor.Name}";
+        }
+
+    }
+
+    class StudentManager
+    {
+      public   List<Student> Students;
+        public List<Course> Courses;
+        public  List<Instructor> Instructors;
+        public StudentManager()
+        {
+             Students = new List<Student>();
+            Courses = new List<Course>();
+            Instructors = new List<Instructor>();
+        }
+       public  bool AddStudent(Student student)
+        {
+
+            Students.Add(student);
+            Console.WriteLine($"{student.Name} is  added successfully");
+            return true;
+        }
+       public  bool AddCourse(Course course)
+        {
+            Courses.Add(course);
+            Console.WriteLine($"{course.Title} added successfully");
+            return true;
+        }
+
+      public   bool AddInstructor(Instructor instructor)
+        {
+            Instructors.Add(instructor);
+            Console.WriteLine($"{instructor.Name}  added sucssfully");
+            return true;
+        }
+        //  انا عملتهاCreat  فوق  ياحماصة      
+        public string FindStudent(int studentId)// من اول هنا ركز في ال public  again 
+        {
+            for (int i = 0; i < Students.Count; i++)
+            {
+                if (Students[i].StudentId == studentId)
+                {
+                    return $"Student Found: {Students[i].PrintDetails()}";
+                }
+            }
+
+            return "Student not found.";
+        }
+
+        public string FindCourse(int courseId)
+        {
+            for (int i = 0; i < Courses.Count; i++)
+            {
+                if (Courses[i].CourseId == courseId)
+                    return $" {Courses[i].PrintDetails()}";
+            }
+            return " Course not found.";
+        }
+        public string FindInstructor(int instructorId)
+        {
+            for (int i = 0; i < Instructors.Count; i++)
+            {
+                if (Instructors[i].InstructorId == instructorId)
+                    return $"{Instructors[i].PrintDetails()}";
+            }
+            return "Instructor not found";
+        }
+        public bool EnrollStudentInCourse(int studentId, int courseId)
+        {
+            Student student = default;// hotha keda fe alwal 
+            for (int i = 0; i < Students.Count; i++)
+            {
+                if (Students[i].StudentId == studentId)
+                {
+                    student = Students[i];
+                    break;
+                }
+            }
+            Course course = default;
+            for (int i = 0; i < Courses.Count; i++)
+            {
+                if (Courses[i].CourseId == courseId)
+                {
+                    course = Courses[i];
+                    break;
+                }
+            }
+            /// مفروض هنضيف ال return بس سيرش عنها بعدين جوا ال for 
+
+            if (student == null || course == null)
+                return false;
+
+            return student.Enroll(course);
+        }
+        /// <summary>
+        // كدة خلصت الدوال بس ناقصنا الجزء البونص بتاع الاسم  
+        /// </summary>
+        public string FindCourse_Name(string title)
+        {
+            for (int i = 0; i < Courses.Count; i++)
+            {
+
+                if (Courses[i].Title.ToLower() == title.ToLower())
+                {
+                    return $" {Courses[i].PrintDetails()}";
+                }
+            }
+            return "Course not found by title ";
+        }
+        public string FindInstructor_Name(string name)
+        {
+            for (int i = 0; i < Instructors.Count; i++)
+            {
+                if (Instructors[i].Name.ToLower() == name.ToLower())
+                {
+                    return $"{Instructors[i].PrintDetails()}";
+                }
+            }
+            return " Instructor not found by name";
+        }
+
+    }
+
+    internal class Program
+    {
+        public static bool ReadForm_user(out int userChoice)
+        {
+            Console.WriteLine("Enter your number of action:\n");
+            Console.WriteLine("1. Add a new Student");
+            Console.WriteLine("2. View all Students");
+            Console.WriteLine("3. Search for a Student by ID");
+            Console.WriteLine("4. Update Student Information");
+            Console.WriteLine("5. Delete a Student");
+            Console.WriteLine("6. Add a new Instructor");
+            Console.WriteLine("7. Add a new Course");
+            Console.WriteLine("8. Enroll a Student in a Course");
+            Console.WriteLine("9. View all Courses");
+            Console.WriteLine("10. View all Instructors");
+            Console.WriteLine("0. Exit");
+            Console.Write("\nYour Choice: ");
+
+            string input = Console.ReadLine();
+
+            if (int.TryParse(input, out userChoice) && userChoice >= 0 && userChoice <= 12)
+            {
+                return true;
+            }
+
+            Console.WriteLine(" Invalid choice. Please enter a number between 0 and 12.");
+
+            return false;
+        }
+        static void Main(string[] args)
+        {
+            StudentManager studentManager = new StudentManager();
+            bool exit = false;
+            int choice = default;
+            while (!exit)
+            {
+                if (!ReadForm_user(out choice))
+                {
+                    Console.WriteLine("Press Enter to try again...");
+                    Console.ReadLine();
+                    continue;
+                }
+                // نرجع للمنيو تاني
+                ////|| اللعبة كبرت منك يا ياسين هنبدأننفذ واحدة واحدة معايا يا ست الكل |
+                switch (choice)
+                {
+                    case 1:
+                        string addMore;
+                        do
+                        {
+                            Console.Write("Enter Student ID: ");
+                            int sid = int.Parse(Console.ReadLine());
+
+                            Console.Write("Enter Student Name: ");
+                            string sname = Console.ReadLine();
+
+                            Console.Write("Enter Student Age: ");
+                            int sage = int.Parse(Console.ReadLine());
+
+                            Student s = new Student(sid, sname, sage);
+                            studentManager.AddStudent(s);
+
+                            Console.Write(" you want to add another student? (y/n): ");
+                            addMore = Console.ReadLine().ToLower();
+
+                        } while (addMore == "y");
+
+                        break;
+                    case 2:
+                        if (studentManager.Students.Count == 0)
+                        {
+                            Console.WriteLine("No students found");
+                        }
+                        else
+                        {
+                            Console.WriteLine("All Students:");
+                            for (int i = 0; i < studentManager.Students.Count; i++)
+                            {
+                                Console.WriteLine(studentManager.Students[i].PrintDetails());
+                            }
+                        }
+                        break;
+                    case 3:
+                        Console.Write("Enter Student ID to Search: ");
+                        int searchId = int.Parse(Console.ReadLine());
+
+                        bool found = false;
+                        for (int i = 0; i < studentManager.Students.Count; i++)
+                        {
+                            if (studentManager.Students[i].StudentId == searchId)
+                            {
+                                Console.WriteLine("Student Found:");
+                                Console.WriteLine(studentManager.Students[i].PrintDetails());
+                                found = true;
+                                break;
+                            }
+                        }
+
+                        if (found==false)
+                            
+                         
+                        {
+                            Console.WriteLine("Student not found.");
+                        }
+
+                        break;
+                    case 4:
+                        Console.Write("Enter Student ID to Update: ");
+                        // c = correct علشان انا راجل كريكتور 
+                        int C_Id = int.Parse(Console.ReadLine());
+
+                        bool isUpdated = false;
+
+                        for (int i = 0; i < studentManager.Students.Count; i++)
+                        {
+                            if (studentManager.Students[i].StudentId == C_Id)
+                            {
+                                Console.Write("Enter correct Name: ");
+                                string C_Name = Console.ReadLine();
+
+                                Console.Write("Enter correct Age: ");
+                                int C_Age = int.Parse(Console.ReadLine());
+
+                                studentManager.Students[i].Name = C_Name;
+                                studentManager.Students[i].Age = C_Age;
+
+                                Console.WriteLine("Student updated successfully.");
+                                isUpdated = true;
+                                break;
+                            }
+                        }
+
+                        if (!isUpdated)
+                        {
+                            Console.WriteLine("Student not found.");
+                        }
+
+                      break;
+
+                    case 5:
+                        Console.Write("Enter Student ID to Delete: ");
+                        //D= delete 
+                        // همحيكوا من زاكرتي 
+                        int D_Id = int.Parse(Console.ReadLine());
+
+                        bool isDeleted = false;
+
+                        for (int i = 0; i < studentManager.Students.Count; i++)
+                        {
+                            if (studentManager.Students[i].StudentId == D_Id)
+                            {
+                                studentManager.Students.RemoveAt(i);
+                                Console.WriteLine("Student deleted successfully");
+                                isDeleted = true;
+                                break;
+                            }
+                        }
+
+                        if (!isDeleted)
+                        {
+                            Console.WriteLine("Student not found");
+                        }
+
+                        break;
+                        // معرفتش اعملها كبيرتهامن شات بس ابقي ارجعلها يا حماصة
+                   
+                    case 6:
+                        Console.Write("Enter Instructor ID: ");
+                        int inst_Id = int.Parse(Console.ReadLine());
+
+                        Console.Write("Enter Instructor Name: ");
+                        string inst_Name = Console.ReadLine();
+
+                        Console.Write("Enter Specialization: ");
+                        string inst_Spec = Console.ReadLine();
+
+                        Instructor newInstructor = new Instructor(inst_Id, inst_Name, inst_Spec);
+                        studentManager.AddInstructor(newInstructor);
+                        break;
+                    case 7:
+                        Console.Write("Enter Course ID: ");
+                        int newCourseId = int.Parse(Console.ReadLine());
+
+                        Console.Write("Enter Course Title: ");
+                        string newCourseTitle = Console.ReadLine();
+
+                        Console.Write("Enter Instructor ID for this course: ");
+                        int instructorId = int.Parse(Console.ReadLine());
+
+                        Instructor foundInstructor = null;
+
+                        for (int i = 0; i < studentManager.Instructors.Count; i++)
+                        {
+                            if (studentManager.Instructors[i].InstructorId == instructorId)
+                            {
+                                foundInstructor = studentManager.Instructors[i];
+                                break;
+                            }
+                        }
+
+                        if (foundInstructor != null)
+                        {
+                            Course course = new Course(newCourseId, newCourseTitle, foundInstructor);
+                            studentManager.AddCourse(course);
+                        }
+                        else
+                        {
+                            Console.WriteLine("Instructor not found.");
+                        }
+
+                        break;
+                    case 8:
+                        Console.Write("Enter Student ID: ");
+                        int enrollStudent_Id = int.Parse(Console.ReadLine());
+
+                        Console.Write("Enter Course ID: ");
+                        int enrollCourse_Id = int.Parse(Console.ReadLine());
+
+                        bool result = studentManager.EnrollStudentInCourse(enrollStudent_Id, enrollCourse_Id);
+
+                        if (result)
+                        {
+                            Console.WriteLine("Student enrolled in course successfully.");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Enrollment failed. Student or Course not found.");
+                        }
+
+                        break;
+                    case 9:
+                        if (studentManager.Courses.Count == 0)
+                        {
+                            Console.WriteLine("No courses found.");
+                        }
+                        else
+                        {
+                            Console.WriteLine("All Courses:");
+                            for (int i = 0; i < studentManager.Courses.Count; i++)
+                            {
+                                Console.WriteLine(studentManager.Courses[i].PrintDetails());
+                            }
+                        }
+
+                        break;
+                    case 10:
+                        if (studentManager.Instructors.Count == 0)
+                        {
+                            Console.WriteLine("No instructors found.");
+                        }
+                        else
+                        {
+                            Console.WriteLine("All Instructors:");
+                            for (int i = 0; i < studentManager.Instructors.Count; i++)
+                            {
+                                Console.WriteLine(studentManager.Instructors[i].PrintDetails());
+                            }
+                        }
+                        break;
+                    case 0:
+                        // الفرحة اقسم بالله 
+                        exit = true;
+                        Console.WriteLine("Exiting program...");
+                        break;
+
+
+                }
+            }
+        }
+    }
+
+}
+
